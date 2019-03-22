@@ -1,0 +1,362 @@
+# depslib dependency file v1.0
+1553291832 source:/home/dave/Development/wizardry/libtcod-raycast/src/main.cpp
+	<SDL2/SDL.h>
+	<SDL2/SDL_image.h>
+	<stdio.h>
+	<math.h>
+	<string>
+	<iostream>
+	"libtcod.h"
+	<SDL2/SDL_ttf.h>
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod.hpp
+	"libtcod.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod.h
+	"libtcod/libtcod.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/libtcod.h
+	"portability.h"
+	"utility.h"
+	"version.h"
+	"bresenham.h"
+	"bsp.h"
+	"color.h"
+	"console.h"
+	"fov.h"
+	"heightmap.h"
+	"image.h"
+	"lex.h"
+	"list.h"
+	"mersenne.h"
+	"mouse.h"
+	"namegen.h"
+	"noise.h"
+	"path.h"
+	"parser.h"
+	"sys.h"
+	"tree.h"
+	"txtfield.h"
+	"zip.h"
+	"console/drawing.h"
+	"console/printing.h"
+	"console/rexpaint.h"
+	"engine/backend.h"
+	"engine/display.h"
+	"engine/globals.h"
+	"sdl2/event.h"
+	"tileset/observer.h"
+	"tileset/tileset.h"
+	"tileset/tile.h"
+	"bresenham.hpp"
+	"bsp.hpp"
+	"color.hpp"
+	"console.hpp"
+	"fov.hpp"
+	"heightmap.hpp"
+	"image.hpp"
+	"lex.hpp"
+	"list.hpp"
+	"mersenne.hpp"
+	"mouse.hpp"
+	"namegen.hpp"
+	"noise.hpp"
+	"parser.hpp"
+	"path.hpp"
+	"sys.hpp"
+	"tree.hpp"
+	"txtfield.hpp"
+	"zip.hpp"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/portability.h
+	<wchar.h>
+	<stdint.h>
+	<stdbool.h>
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/utility.h
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/version.h
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/bresenham.h
+	"portability.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/bsp.h
+	"portability.h"
+	"mersenne_types.h"
+	"tree.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/mersenne_types.h
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/tree.h
+	"portability.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/color.h
+	"portability.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/console.h
+	"portability.h"
+	"console/drawing.h"
+	"console/printing.h"
+	"console/rexpaint.h"
+	"color.h"
+	"console_types.h"
+	"image.h"
+	"list.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/console/drawing.h
+	"../console_types.h"
+	"../portability.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/console_types.h
+	"portability.h"
+	"color.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/console/printing.h
+	<array>
+	<cstdbool>
+	<string>
+	"../portability.h"
+	"../console_types.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/console/rexpaint.h
+	"../portability.h"
+	"../console_types.h"
+	"../list.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/list.h
+	"portability.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/image.h
+	"portability.h"
+	"color.h"
+	"console_types.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/fov.h
+	"portability.h"
+	"fov_types.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/fov_types.h
+	"portability.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/heightmap.h
+	"portability.h"
+	"mersenne_types.h"
+	"noise.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/noise.h
+	"portability.h"
+	"mersenne_types.h"
+	"noise_defaults.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/noise_defaults.h
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/lex.h
+	"portability.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/mersenne.h
+	"portability.h"
+	"mersenne_types.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/mouse.h
+	"portability.h"
+	"mouse_types.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/mouse_types.h
+	"portability.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/namegen.h
+	"portability.h"
+	"list.h"
+	"mersenne.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/path.h
+	"portability.h"
+	"fov_types.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/parser.h
+	"portability.h"
+	"color.h"
+	"list.h"
+	"lex.h"
+	"mersenne.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/sys.h
+	"portability.h"
+	"list.h"
+	"image.h"
+	"mouse_types.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/txtfield.h
+	"portability.h"
+	"color.h"
+	"console_types.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/zip.h
+	"portability.h"
+	"color.h"
+	"console_types.h"
+	"image.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/engine/backend.h
+	<memory>
+	"../console_types.h"
+	"../mouse_types.h"
+	"../sys.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/engine/display.h
+	<array>
+	<string>
+	"../color/canvas.h"
+	"../tileset/tileset.h"
+	"../console_types.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/color/canvas.h
+	<string>
+	"color.h"
+	"../utility/vector2.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/color/color.h
+	<stdint.h>
+	"../color.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/utility/vector2.h
+	<algorithm>
+	<cstddef>
+	<initializer_list>
+	<iostream>
+	<stdexcept>
+	<tuple>
+	<vector>
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/tileset/tileset.h
+	<algorithm>
+	<memory>
+	<utility>
+	<vector>
+	"../portability.h"
+	"tile.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/tileset/tile.h
+	<stdint.h>
+	<algorithm>
+	<vector>
+	"../portability.h"
+	"../color/canvas.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/engine/globals.h
+	<memory>
+	"backend.h"
+	"display.h"
+	"../tileset/tileset.h"
+	"../tileset/tilesheet.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/tileset/tilesheet.h
+	<memory>
+	<string>
+	<utility>
+	"../color/canvas.h"
+	"tile.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/sdl2/event.h
+	"../console_types.h"
+	"../mouse.h"
+	"../sys.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/tileset/observer.h
+	"../portability.h"
+	<algorithm>
+	<memory>
+	<utility>
+	<vector>
+	"tile.h"
+	"tileset.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/bresenham.hpp
+	"bresenham.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/bsp.hpp
+	"bsp.h"
+	"list.hpp"
+	"mersenne.hpp"
+	"tree.hpp"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/list.hpp
+	"list.h"
+	<string.h>
+	<stdlib.h>
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/mersenne.hpp
+	"mersenne.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/tree.hpp
+	"tree.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/color.hpp
+	<algorithm>
+	"color.h"
+	"utility.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/console.hpp
+	<string>
+	"console.h"
+	"console/drawing.h"
+	"console/printing.h"
+	"console/rexpaint.h"
+	"engine/display.h"
+	"image.hpp"
+	"color.hpp"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/image.hpp
+	"color.hpp"
+	"console.hpp"
+	"image.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/fov.hpp
+	"fov.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/heightmap.hpp
+	"heightmap.h"
+	"noise.hpp"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/noise.hpp
+	"mersenne.hpp"
+	"noise.h"
+	"noise_defaults.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/lex.hpp
+	"lex.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/mouse.hpp
+	"mouse.h"
+	"mouse_types.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/namegen.hpp
+	"list.hpp"
+	"mersenne.hpp"
+	"namegen.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/parser.hpp
+	"color.hpp"
+	"list.hpp"
+	"parser.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/path.hpp
+	"fov.hpp"
+	"path.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/sys.hpp
+	"image.hpp"
+	"mouse.hpp"
+	"sys.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/txtfield.hpp
+	"color.hpp"
+	"console.hpp"
+	"txtfield.h"
+
+1552700980 /home/dave/Development/wizardry/libtcod-1.11.1/src/libtcod/zip.hpp
+	"color.hpp"
+	"console.hpp"
+	"image.hpp"
+	"zip.h"
+

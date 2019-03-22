@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="libtcod-raycaster" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/raycaster" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add directory="../libtcod-1.11.1/src" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/raycaster" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add directory="../libtcod-1.11.1/src" />
+			<Add directory="../sorcery/include" />
+			<Add directory="../external" />
+			<Add directory="../external/jsoncpp/include" />
+			<Add directory="../external/simpleini" />
+			<Add directory="../external/sqlite-modern-cpp/hdr" />
+		</Compiler>
+		<Linker>
+			<Add option="-ltcod" />
+			<Add option="-lSDL2" />
+			<Add option="-lSDL2_image" />
+			<Add library="../libtcod-1.11.1/libtcod.so" />
+			<Add directory="../libtcod-1.11.1" />
+		</Linker>
+		<Unit filename="src/main.cpp" />
+		<Extensions>
+			<envvars />
+			<code_completion />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
