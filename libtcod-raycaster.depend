@@ -360,12 +360,11 @@
 	"image.hpp"
 	"zip.h"
 
-1553462672 source:/home/dave/Development/wizardry/libtcod-raycaster/src/main.cpp
+1553464817 source:/home/dave/Development/wizardry/libtcod-raycaster/src/main.cpp
 	"main.hpp"
 
-1553461794 /home/dave/Development/wizardry/libtcod-raycaster/inc/main.hpp
-	<stdio.h>
-	<math.h>
+1553463796 /home/dave/Development/wizardry/libtcod-raycaster/inc/main.hpp
+	<cmath>
 	<string>
 	<iostream>
 	<SDL2/SDL.h>
