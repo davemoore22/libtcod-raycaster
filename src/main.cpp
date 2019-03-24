@@ -1,3 +1,18 @@
+// Copyright 2019 Dave Moore
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
+// Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+// WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 #include "main.hpp"
 
 // Surface Resolution (Pixels)
@@ -53,7 +68,7 @@ SDL_Surface* floor_surface = {nullptr};
 SDL_Surface* ceiling_surface = {nullptr};
 SDL_Texture* wall_textures[3] = {nullptr};
 
-void* mPixels = {nullptr};
+void* memory_pixels = {nullptr};
 
 // Raycasting Data
 double scr_pts [SURFACE_WIDTH] = {};		// Tangent y-coordinate for theta = 0, one for every horizontal pixel
@@ -63,15 +78,12 @@ double distortion [SURFACE_WIDTH] = {};		// Correction values for distortion
 // Player Info and Movement
 double player_x = {1.5};					// Initial player position
 double player_y = {1.5};
-double theta = 0.0;							// Initial central ray direction
-int ticks;									// ms
-int diff_ticks;								// ms
+double theta = {0.0};						// Initial central ray direction
+int ticks = {};									// ms
+int diff_ticks = {};								// ms
 
-double speed = 0.0; 						// sqsides/s
-double turn = 0.0;  						// rad/s
-
-// libtcod offscreen buffer
-std::unique_ptr<TCODConsole> offscreen;
+double speed = {0.0}; 						// sqsides/s
+double turn = {0.0};  						// rad/s
 
 // Functions
 template <typename T>
@@ -219,7 +231,6 @@ auto initialise() -> int
 
 	// Initialise libtcod
 	TCODConsole::initRoot(WINDOW_WIDTH, WINDOW_HEIGHT, "Libtcod Raycaster Demo", false, TCOD_RENDERER_SDL);
-	offscreen = std::make_unique<TCODConsole>(SURFACE_WIDTH, SURFACE_HEIGHT);
 
     return 0;
 }
@@ -337,7 +348,7 @@ auto render() -> void
 		// And now deal with floor texture pixels
 		if (y > 0) {
 			Uint32 floor[y] = {};
-			Uint32 ceilg[y] = {};
+			Uint32 ceiling[y] = {};
 			Uint32* pixsflr = {reinterpret_cast<Uint32*>(floor_surface->pixels)};
 			Uint32* pixsclg = {reinterpret_cast<Uint32*>(ceiling_surface->pixels)};
 			for (int j = y - 1 ; j >= 0; j--) {
@@ -347,14 +358,14 @@ auto render() -> void
 
 				double real_x = {player_x + rot_x * rev_dist};
 				double real_y = {player_y + rot_y * rev_dist};
-				real_x = real_x - (int) real_x;
-				real_y = real_y - (int) real_y;
+				real_x = real_x - static_cast<int>(real_x);
+				real_y = real_y - static_cast<int>(real_y);
 				if (real_x < 0)
 					real_x += 1;
 				if (real_y < 0)
 					real_y += 1;
-				int tx = std::floor(real_x * 64);
-				int ty = std::floor(real_y * 64);
+				int tx = {std::floor(real_x * 64)};
+				int ty = {std::floor(real_y * 64)};
 
 				int dark_floor = {255};
 				if (rev_corr > DARKEST_DIST)
@@ -362,134 +373,137 @@ auto render() -> void
 				else if (rev_corr <= MIN_DIST)
 					dark_floor = 255;
 				else // interpolate
-					dark_floor = std::floor( (rev_corr - MIN_DIST) * (DARKNESS_ALPHA - 255) /
+					dark_floor = std::floor((rev_corr - MIN_DIST) * (DARKNESS_ALPHA - 255) /
 						(DARKEST_DIST - MIN_DIST) + 255);
 				double scale = {1.0 * dark_floor / 255};
 
 				Uint32 floor_pixel = {static_cast<Uint32>(pixsflr[64 * ty + tx])};
 				Uint32 ceiling_pixel = {static_cast<Uint32>(pixsclg[64 * ty + tx])};
 
-				Uint32 f_r = (( floor_pixel >> 16 ) & 0xFF ) * scale;
-				Uint32 f_g = (( floor_pixel >> 8 ) & 0xFF ) * scale;
-				Uint32 f_b = (( floor_pixel >> 0 ) & 0xFF ) * scale;
+				Uint32 f_r = {((floor_pixel >> 16) & 0xFF) * scale};
+				Uint32 f_g = {((floor_pixel >> 8) & 0xFF) * scale};
+				Uint32 f_b = {((floor_pixel >> 0) & 0xFF) * scale};
 				floor[y - 1 - j] = (f_r << 16) + (f_g << 8) + (f_b << 0);
 
-				Uint32 g_r = (( ceiling_pixel >> 16 ) & 0xFF ) * scale;
-				Uint32 g_g = (( ceiling_pixel >> 8 ) & 0xFF ) * scale;
-				Uint32 g_b = (( ceiling_pixel >> 0 ) & 0xFF ) * scale;
-				ceilg[j] = (g_r << 16) + (g_g << 8) + (g_b << 0);
+				Uint32 g_r = {((ceiling_pixel >> 16) & 0xFF) * scale};
+				Uint32 g_g = {((ceiling_pixel >> 8) & 0xFF) * scale};
+				Uint32 g_b = {((ceiling_pixel >> 0) & 0xFF) * scale};
+				ceiling[j] = (g_r << 16) + (g_g << 8) + (g_b << 0);
 			}
 
-			int pitch = 1 * sizeof(Uint32);
+			// And render floor/ceiling
+			int pitch = {1 * sizeof(Uint32)};
 			SDL_Rect rect = {0, 0, 1, y};
+			if (SDL_LockTexture(floor_texture, &rect, &memory_pixels, &pitch) != 0)
+				std::cout << SDL_GetError() << std::endl;
 
-			if (SDL_LockTexture(floor_texture, &rect, &mPixels, &pitch) != 0){
-				printf("Error: %s\n", SDL_GetError() );
-			}
-			Uint8* pixels = (Uint8 *) mPixels;
+			Uint8* pixels = {reinterpret_cast<Uint8*>(memory_pixels)};
 			memcpy(pixels, floor, y * pitch);
 			SDL_UnlockTexture(floor_texture);
-			SDL_Rect dstflr = {i, y + height, 1, y};
-			SDL_RenderCopy (renderer, floor_texture, &rect, &dstflr);
+			SDL_Rect destination_floor = {i, y + height, 1, y};
+			SDL_RenderCopy (renderer, floor_texture, &rect, &destination_floor);
 
-			if (SDL_LockTexture(ceiling_texture, &rect, &mPixels, &pitch) != 0){
-				printf("Error: %s\n", SDL_GetError() );
-			}
-			pixels = (Uint8 *) mPixels;
-			memcpy(pixels, ceilg, y * pitch);
+			if (SDL_LockTexture(ceiling_texture, &rect, &memory_pixels, &pitch) != 0)
+				std::cout << SDL_GetError() << std::endl;
+
+			pixels = {reinterpret_cast<Uint8*>(memory_pixels)};
+			memcpy(pixels, ceiling, y * pitch);
 			SDL_UnlockTexture(ceiling_texture);
 
-			SDL_Rect dstclg = {i, 0, 1, y};
-			SDL_RenderCopy (renderer, ceiling_texture, &rect, &dstclg);
+			SDL_Rect destination_ceiling = {i, 0, 1, y};
+			SDL_RenderCopy (renderer, ceiling_texture, &rect, &destination_ceiling);
 		}
-
     }
 }
 
-void updateTicks (){
-    int ticksNow = SDL_GetTicks();
-    diff_ticks = ticksNow - ticks;
-    ticks = ticksNow;
+auto update_ticks() -> void
+{
+	int ticks_now = {SDL_GetTicks()};
+	diff_ticks = ticks_now - ticks;
+	ticks = ticks_now;
 }
 
-
-void close ()
+auto close() -> void
 {
-    if (renderer != NULL)
+    if (renderer != nullptr)
         SDL_DestroyRenderer(renderer);
-    if (working_surface != NULL)
+    if (working_surface != nullptr)
         SDL_FreeSurface(working_surface);
-    //if (window != NULL)
-    //   SDL_DestroyWindow(window);
-    if (working_texture != NULL)
+    if (working_texture != nullptr)
         SDL_DestroyTexture(working_texture);
 
     IMG_Quit();
     SDL_Quit();
+    TCOD_quit();
 }
 
-void updateWorld (){
+auto update_world() -> void
+{
+    double coss = {std::cos(theta)};
+	double sinn = {std::sin(theta)};
 
-    double coss = cos(theta);
-	double sinn = sin(theta);
+	// For when walking backwards
+	int dsgn = {sign(speed)};
+	double sx = {sign(coss) * dsgn};
+	double sy = {sign(sinn) * dsgn};
 
-	int dsgn = sign(speed); // for when walking backwards
-	double sx = sign(coss) * dsgn;
-	double sy = sign(sinn) * dsgn;
+	double dt = {(diff_ticks / 1000.0)};
+	double dp = {dt * speed};
+	double dx = {coss * dp};
+	double dy = {sinn * dp};
 
-	double dt = (diff_ticks / 1000.0);
-	double dp = dt * speed;
-	double dx = coss * dp;
-	double dy = sinn * dp;
+	double player_x_new = {player_x + dx};
+	double player_y_new = {player_y + dy};
 
-	double player_x_new = player_x + dx;
-	double player_y_new = player_y + dy;
+	// Handle collision detection
+	double cx_b = {player_x_new - sx * MIN_DIST};
+	double cx_f = {player_x_new + sx * MIN_DIST};
+	double cy_b = {player_y_new - sy * MIN_DIST};
+	double cy_f = {player_y_new + sy * MIN_DIST};
+	if (!is_colliding(cx_f, cy_f) &&	!is_colliding(cx_b, cy_f) && !is_colliding(cx_f, cy_b)) {
 
-	// collision detection
-	double cx_b = player_x_new - sx * MIN_DIST;
-	double cx_f = player_x_new + sx * MIN_DIST;
-	double cy_b = player_y_new - sy * MIN_DIST;
-	double cy_f = player_y_new + sy * MIN_DIST;
-	if (	!is_colliding(cx_f, cy_f)
-		&&	!is_colliding(cx_b, cy_f)
-		&&	!is_colliding(cx_f, cy_b) )
-	{	// direction where playing is looking at
+		// Direction where player is looking at
 		player_x = player_x_new;
 		player_y = player_y_new;
-	}
-	else if (!is_colliding(cx_f, player_y + MIN_DIST)
-		&& 	 !is_colliding(cx_f, player_y - MIN_DIST))
-	{ // X-direction
+	} else if (!is_colliding(cx_f, player_y + MIN_DIST) && !is_colliding(cx_f, player_y - MIN_DIST)) {
+
+		// X-Direction
 		player_x = player_x_new;
-	}
-	else if (!is_colliding(player_x + MIN_DIST, cy_f)
-		&& 	 !is_colliding(player_x - MIN_DIST, cy_f))
-	{ // Y-direction
+	} else if (!is_colliding(player_x + MIN_DIST, cy_f) && 	!is_colliding(player_x - MIN_DIST, cy_f)) {
+
+		// Y-Direction
 		player_y = player_y_new;
 	}
-	// else: no movement possible (corner)
 
-    double diffTurn = dt * turn;
+    // Otherwise no movement is possible (we are in a corner)
+    double diffTurn = {dt * turn};
     theta += diffTurn;
 }
 
-
-int main( int argc, char* args[] )
+auto main(int argc, char* args[]) -> int
 {
-	void * mmPixels;
-    int mPitch;
+    // Initialise
+	SDL_Color rgb = {};
+	Uint32 data = {};
+	std::string version = {"Powered by Libtcod " + std::to_string(TCOD_MAJOR_VERSION) + "." +
+		std::to_string(TCOD_MINOR_VERSION) + "." + std::to_string(TCOD_PATCHLEVEL)};
 
-    if (initialise () < 0)
+	// libtcod off-screen buffer
+	std::unique_ptr<TCODConsole> offscreen = std::make_unique<TCODConsole>(SURFACE_WIDTH, SURFACE_HEIGHT);
+
+	if (initialise () < 0)
         return -1;
 
-    bool quit = false;
+	// Input Loop
+	bool quit = {false};
+	TCOD_key_t key_pressed = {};
 
-    TCOD_key_t key_pressed = {};
+	while (!quit) {
 
-    while (!quit) {
-
+		// Get keypress
 		TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &key_pressed, nullptr);
 
+		// Handle Movement
 		speed = 0.0;
 		turn = 0.0;
 		switch (key_pressed.vk) {
@@ -513,124 +527,65 @@ int main( int argc, char* args[] )
 				break;
 		}
 
-        updateTicks();
-        updateWorld();
+		// Update World
+        update_ticks();
+        update_world();
 
-        // At this point
-
-
-        //Fill the surface black
-        SDL_SetRenderDrawColor ( renderer, 0x00, 0x00, 0x00, 0xFF );
+		// Clear renderer and render
+        SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
         SDL_RenderClear(renderer);
         SDL_SetRenderTarget(renderer, working_texture);
         SDL_RenderClear(renderer);
-
         render();
 
-
-        SDL_Color rgb;
-		int stream_w, stream_h;
-		Uint32 stream_format;
+        // Grab the render contents (WARNING: THIS IS VERY VERY VERY HIDEOUSLY SLOW!)
 		SDL_SetRenderTarget(renderer, working_texture_streaming);
 		SDL_RenderCopy(renderer, working_texture, NULL, NULL);
-
-
-
-		/*
-
-
-		SDL_SetRenderTarget(renderer, NULL);
-		SDL_LockTexture(working_texture_streaming, NULL, &mmPixels, &mPitch);
-
-		SDL_QueryTexture(working_texture_streaming, &stream_format, NULL, &stream_w, &stream_h);
-		SDL_PixelFormat* mappingFormat = SDL_AllocFormat( stream_format );
-
-		Uint8 dffd = mappingFormat->BytesPerPixel;
-
-		SDL_Color rgb;
-		for (int y = 0; y < stream_h; y++) {
-			Uint32 *p = (Uint32 *)(mmPixels + mPitch*y);
-			for (int x = 0; x < stream_w; x++) {
-				SDL_GetRGB(*p, mappingFormat, &rgb.r, &rgb.g, &rgb.b);
-				TCODColor temp(std::stoi(std::to_string(rgb.r)), std::stoi(std::to_string(rgb.g)),
-				std::stoi(std::to_string(rgb.b)));
-
-				offscreen->setCharBackground(x, y, temp);
-					offscreen->setCharForeground(x, y, temp);
-					offscreen->putChar(x, y, 32);
-
-			}
-
-		}
-
-		SDL_UnlockTexture( working_texture_streaming );
-
-
-		mmPixels = NULL;
-
-		*/
-
-
-
-       //SDL_SetRenderTarget(renderer, NULL);
-        //SDL_RenderCoplayer_y(renderer, working_texture, NULL, NULL);
-
-		SDL_Surface *source_for_libtcod = SDL_CreateRGBSurface(0, SURFACE_WIDTH , SURFACE_HEIGHT, 32,
-			0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+		SDL_Surface *source_for_libtcod = SDL_CreateRGBSurface(0, SURFACE_WIDTH , SURFACE_HEIGHT, 32, 0x00ff0000,
+			0x0000ff00, 0x000000ff, 0xff000000);
 		SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_RGB888, source_for_libtcod->pixels,
 			source_for_libtcod->pitch);
 
+        // Clear libtcod screen and buffer
         TCODConsole::root->clear();
-
         offscreen->setDefaultBackground(TCODColor::black);
         offscreen->clear();
 
-       // SDL_Color rgb;
-        Uint32 data;
+        // Populate libtcod offscreen
         for (int x = 0; x < SURFACE_WIDTH; x++) {
 			for (int y = 0; y < SURFACE_HEIGHT; y++) {
 				data = get_pixel(source_for_libtcod, x, y);
 				SDL_GetRGB(data, source_for_libtcod->format, &rgb.r, &rgb.g, &rgb.b);
-
-                TCODColor temp(std::stoi(std::to_string(rgb.r)), std::stoi(std::to_string(rgb.g)),
-					std::stoi(std::to_string(rgb.b)));
-
+				TCODColor temp(rgb.r, rgb.g, rgb.b);
                 offscreen->setCharBackground(x, y, temp);
 				offscreen->setCharForeground(x, y, temp);
                 offscreen->putChar(x, y, 32);
 			}
         }
 
-        std::cout << "frame" << std::endl;
+        // Note that using the alternate refreshConsole method crashes so a new image needs to be created every frame
 
-        TCODImage *image_to_render = new TCODImage(offscreen.get());
+		// Render to libtcod
+		std::unique_ptr<TCODImage> image_to_render = std::make_unique<TCODImage>(offscreen.get());
 		image_to_render->scale(WINDOW_WIDTH * 2, WINDOW_HEIGHT * 2);
 		image_to_render->blit2x(TCODConsole::root, 1, 1);
 
+		// Update Text
 		TCODConsole::root->setDefaultForeground(TCODColor::yellow);
-		TCODConsole::root->print(2, WINDOW_HEIGHT - 5, "Libtcod Raycaster Coplayer_yright (C) 2019 Dave Moore");
-
+		TCODConsole::root->printf(2, WINDOW_HEIGHT - 5, "Libtcod Raycaster Coplayer_yright (C) 2019 Dave Moore");
 		TCODConsole::root->setDefaultForeground(TCODColor::orange);
-		TCODConsole::root->print(2, WINDOW_HEIGHT - 3, "davemoore22@gmail.com");
-
+		TCODConsole::root->printf(2, WINDOW_HEIGHT - 3, "davemoore22@gmail.com");
 		TCODConsole::root->setDefaultForeground(TCODColor::red);
-		TCODConsole::root->print(2, WINDOW_HEIGHT - 1, "Code released under the GPL v3");
-
+		TCODConsole::root->printf(2, WINDOW_HEIGHT - 1, "Code released under the GPL v3");
 		TCODConsole::root->setDefaultForeground(TCODColor::silver);
-		TCODConsole::root->print(70, WINDOW_HEIGHT - 5, "Based upon 3D Raycaster by Timmos");
-
+		TCODConsole::root->printf(70, WINDOW_HEIGHT - 5, "Based upon 3D Raycaster by Timmos");
 		TCODConsole::root->setDefaultForeground(TCODColor::cyan);
-		TCODConsole::root->print(70, WINDOW_HEIGHT - 3, "https://github.com/T1mmos/raycaster-sdl");
-
+		TCODConsole::root->printf(70, WINDOW_HEIGHT - 3, "https://github.com/T1mmos/raycaster-sdl");
 		TCODConsole::root->setDefaultForeground(TCODColor::silver);
-		std::string version = "Powered by Libtcod " + std::to_string(TCOD_MAJOR_VERSION) + "." +
-			std::to_string(TCOD_MINOR_VERSION) + "." + std::to_string(TCOD_PATCHLEVEL);
 		TCODConsole::root->print(70, WINDOW_HEIGHT - 1, version);
-
 		TCODConsole::root->flush();
     }
+
     close();
-
-
     return 0;
 }
