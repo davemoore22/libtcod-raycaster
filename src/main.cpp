@@ -576,7 +576,7 @@ auto main(int argc, char* args[]) -> int
 		TCODConsole::root->setDefaultForeground(TCODColor::orange);
 		TCODConsole::root->printf(2, WINDOW_HEIGHT - 3, "davemoore22@gmail.com");
 		TCODConsole::root->setDefaultForeground(TCODColor::red);
-		TCODConsole::root->printf(2, WINDOW_HEIGHT - 1, "Code released under the GPL v3");
+		TCODConsole::root->printf(2, WINDOW_HEIGHT - 1, "Code released under MIT License");
 		TCODConsole::root->setDefaultForeground(TCODColor::silver);
 		TCODConsole::root->printf(70, WINDOW_HEIGHT - 5, "Based upon 3D Raycaster by Timmos");
 		TCODConsole::root->setDefaultForeground(TCODColor::cyan);
